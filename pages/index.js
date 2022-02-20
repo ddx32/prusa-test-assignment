@@ -1,7 +1,50 @@
 import Head from "next/head";
 import { getData } from "./api/list";
+import { useEffect, useRef, useState } from "react";
+
+async function fetchPrintersByName(query, setPrinters) {
+  const res = await fetch(`${window.location.origin}/api/list?search=${query}`);
+  const { data } = await res.json();
+  setPrinters(data);
+}
+
+function getFilteredPrinters(printers, filter) {
+  return printers.filter((printer) => {
+    return Object.entries(filter).reduce((acc, current) => {
+      const [paramName, value] = current;
+      if (value && !printer[paramName]) {
+        acc = false;
+      }
+      return acc;
+    }, true);
+  });
+}
 
 export default function CompareTable({ data }) {
+  const [printers, setPrinters] = useState(data);
+  const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState({
+    diyKit: false,
+    builtPrinter: false,
+  });
+
+  // Make sure we call the API only after we change the `query` state
+  const isInitialRender = useRef(true);
+  useEffect(async () => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+    await fetchPrintersByName(query, setPrinters);
+  }, [query]);
+
+  function setIndividualFilter(event) {
+    setFilter({
+      ...filter,
+      [event.target.name]: event.target.checked,
+    });
+  }
+
   return (
     <div className="container">
       <Head>
@@ -9,7 +52,22 @@ export default function CompareTable({ data }) {
       </Head>
 
       <main>
-        <h1>Hey there!</h1>
+        <section>
+          <h2>Filter table</h2>
+          <input
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          <input type="checkbox" name="diyKit" onChange={setIndividualFilter} />{" "}
+          DIY kit
+          <input
+            type="checkbox"
+            name="builtPrinter"
+            onChange={setIndividualFilter}
+          />{" "}
+          Built printer
+        </section>
         <table>
           <tbody>
             <tr>
@@ -22,7 +80,7 @@ export default function CompareTable({ data }) {
               <th>Filament diameter</th>
             </tr>
 
-            {data.map((item) => (
+            {getFilteredPrinters(printers, filter).map((item) => (
               <tr key={item.id}>
                 <td>{item.title}</td>
                 <td>{item.buildVolume}</td>
