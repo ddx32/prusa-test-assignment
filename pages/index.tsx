@@ -1,26 +1,35 @@
 import Head from "next/head";
 import { getData } from "./api/list";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-async function fetchPrintersByName(query, setPrinters) {
+async function fetchPrintersByName(
+  query: string,
+  setPrinters: (a: Printer[]) => void
+) {
   const res = await fetch(`${window.location.origin}/api/list?search=${query}`);
   const { data } = await res.json();
   setPrinters(data);
 }
 
-function getFilteredPrinters(printers, filter) {
-  return printers.filter((printer) => {
-    return Object.entries(filter).reduce((acc, current) => {
-      const [paramName, value] = current;
-      if (value && !printer[paramName]) {
-        acc = false;
-      }
-      return acc;
-    }, true);
+function getFilteredPrinters(
+  printers: Printer[],
+  filter: Record<string, boolean>
+): Printer[] {
+  return printers.filter((printer: Printer) => {
+    return Object.entries(filter).reduce(
+      (acc: boolean, current: [string, boolean]) => {
+        const [paramName, value] = current;
+        if (value && !printer[paramName as keyof Printer]) {
+          acc = false;
+        }
+        return acc;
+      },
+      true
+    );
   });
 }
 
-export default function CompareTable({ data }) {
+export default function CompareTable({ data }: { data: Printer[] }) {
   const [printers, setPrinters] = useState(data);
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState({
@@ -30,15 +39,16 @@ export default function CompareTable({ data }) {
 
   // Make sure we call the API only after we change the `query` state
   const isInitialRender = useRef(true);
-  useEffect(async () => {
+  useEffect(() => {
     if (isInitialRender.current) {
       isInitialRender.current = false;
       return;
     }
-    await fetchPrintersByName(query, setPrinters);
+    (async () => await fetchPrintersByName(query, setPrinters))();
   }, [query]);
 
-  function setIndividualFilter(event) {
+  function setIndividualFilter(event: React.ChangeEvent<HTMLInputElement>) {
+    console.log(event);
     setFilter({
       ...filter,
       [event.target.name]: event.target.checked,

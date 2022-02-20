@@ -1,4 +1,6 @@
-const sourceData = [
+import { NextApiRequest, NextApiResponse } from "next";
+
+const sourceData: Printer[] = [
   {
     id: 1,
     title: "Original Prusa MINI",
@@ -49,16 +51,22 @@ const sourceData = [
   },
 ];
 
-export function getData(searchQuery) {
+export function getData(searchQuery?: string): { data: Printer[] } {
   if (!searchQuery) {
     return { data: sourceData };
   }
 
-  const result = sourceData.filter((item) => item.title.includes(searchQuery));
+  const result = sourceData.filter((item: Printer) =>
+    item.title.includes(searchQuery)
+  );
   return { data: result };
 }
 
-export default function handler(req, res) {
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { query } = req;
-  res.status(200).json(getData(query.search));
+  if (typeof query.search === "string") {
+    res.status(200).json(getData(query.search));
+  } else {
+    res.status(500);
+  }
 }
