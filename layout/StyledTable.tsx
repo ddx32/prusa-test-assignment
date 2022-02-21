@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ORANGE } from "./constants";
+import { ORANGE } from "../constants/colors";
 
 const Table = styled.table`
   display: flex;

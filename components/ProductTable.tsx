@@ -1,22 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import StyledTable from "../layout/StyledTable";
 import TableHeading from "./TableHeading";
 import BuyButton from "./BuyButton";
 import HiddenParams from "./HiddenParams";
-
-const paramList: paramName[] = [
-  ["buildVolume", "Build Volume"],
-  ["layerHeight", "Layer height"],
-  ["maxTravelSpeed", "Max travel speed"],
-  ["maxTemperatures", "Max temperatures"],
-  ["controller", "Controller"],
-  ["filamentDiameter", "Filament Diameter"],
-];
-
-const skuVariants: paramName[] = [
-  ["diyKit", "DIY Kit"],
-  ["builtPrinter", "Built printer"],
-];
+import { paramList, skuVariants } from "../constants/parameters";
 
 function toggleParameter(
   paramName: paramName,

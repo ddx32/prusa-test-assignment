@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { ORANGE } from "../layout/constants";
+import { ORANGE } from "../constants/colors";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
 
 const HiddenParamButton = styled.button`
   display: inline-block;
