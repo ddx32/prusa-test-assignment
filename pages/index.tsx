@@ -8,6 +8,7 @@ export default function Homepage({ data }: { data: Printer[] }) {
     <BasicLayout>
       <Head>
         <title>Compare Prusa printers</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <main>
