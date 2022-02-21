@@ -56,8 +56,9 @@ export function getData(searchQuery?: string): { data: Printer[] } {
     return { data: sourceData };
   }
 
+  const caseInsensitiveQuery = searchQuery.toUpperCase();
   const result = sourceData.filter((item: Printer) =>
-    item.title.includes(searchQuery)
+    item.title.toUpperCase().includes(caseInsensitiveQuery)
   );
   return { data: result };
 }
