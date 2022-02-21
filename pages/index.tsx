@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { getData } from "./api/list";
 import React, { useEffect, useRef, useState } from "react";
+import BasicLayout from "../layout/BasicLayout";
+import ProductTable from "../components/ProductTable";
 
 async function fetchPrintersByName(
   query: string,
@@ -48,7 +50,6 @@ export default function CompareTable({ data }: { data: Printer[] }) {
   }, [query]);
 
   function setIndividualFilter(event: React.ChangeEvent<HTMLInputElement>) {
-    console.log(event);
     setFilter({
       ...filter,
       [event.target.name]: event.target.checked,
@@ -56,55 +57,42 @@ export default function CompareTable({ data }: { data: Printer[] }) {
   }
 
   return (
-    <div className="container">
+    <BasicLayout>
       <Head>
         <title>Compare Prusa printers</title>
       </Head>
 
       <main>
+        <h1>Compare Prusa printers</h1>
         <section>
-          <h2>Filter table</h2>
-          <input
-            type="text"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-          <input type="checkbox" name="diyKit" onChange={setIndividualFilter} />{" "}
-          DIY kit
-          <input
-            type="checkbox"
-            name="builtPrinter"
-            onChange={setIndividualFilter}
-          />{" "}
-          Built printer
+          <label>
+            Search by name:
+            <input
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="diyKit"
+              onChange={setIndividualFilter}
+            />{" "}
+            DIY kit
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="builtPrinter"
+              onChange={setIndividualFilter}
+            />{" "}
+            Built printer
+          </label>
         </section>
-        <table>
-          <tbody>
-            <tr>
-              <th>Title</th>
-              <th>Build volume</th>
-              <th>Layer height</th>
-              <th>Max travel speed</th>
-              <th>Max temperatures</th>
-              <th>Controller</th>
-              <th>Filament diameter</th>
-            </tr>
-
-            {getFilteredPrinters(printers, filter).map((item) => (
-              <tr key={item.id}>
-                <td>{item.title}</td>
-                <td>{item.buildVolume}</td>
-                <td>{item.layerHeight}</td>
-                <td>{item.maxTravelSpeed}</td>
-                <td>{item.maxTemperatures}</td>
-                <td>{item.controller}</td>
-                <td>{item.filamentDiameter}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <ProductTable printers={getFilteredPrinters(printers, filter)} />
       </main>
-    </div>
+    </BasicLayout>
   );
 }
 
