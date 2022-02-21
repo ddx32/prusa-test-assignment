@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import { ORANGE } from "./constants";
 
 export const GlobalStyle = createGlobalStyle`
   html {
@@ -13,7 +14,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   h1, h2, h3, h4, a {
-    color: #fa6831;
+    color: ${ORANGE};
     text-transform: uppercase;
   }
 `;

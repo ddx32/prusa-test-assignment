@@ -1,32 +1,91 @@
+import React, { useState } from "react";
 import StyledTable from "../layout/StyledTable";
+import TableHeading from "./TableHeading";
+import BuyButton from "./BuyButton";
+import HiddenParams from "./HiddenParams";
+
+const paramList: paramName[] = [
+  ["buildVolume", "Build Volume"],
+  ["layerHeight", "Layer height"],
+  ["maxTravelSpeed", "Max travel speed"],
+  ["maxTemperatures", "Max temperatures"],
+  ["controller", "Controller"],
+  ["filamentDiameter", "Filament Diameter"],
+];
+
+const skuVariants: paramName[] = [
+  ["diyKit", "DIY Kit"],
+  ["builtPrinter", "Built printer"],
+];
+
+function toggleParameter(
+  paramName: paramName,
+  hiddenParams: paramName[],
+  setHiddenParams: (a: paramName[]) => void
+): void {
+  if (hiddenParams.includes(paramName)) {
+    setHiddenParams(hiddenParams.filter((param) => param !== paramName));
+  } else {
+    setHiddenParams([...hiddenParams, paramName]);
+  }
+}
 
 export default function ProductTable({ printers }: { printers: Printer[] }) {
+  const [hiddenParams, setHiddenParams] = useState<paramName[]>([]);
+
   return (
-    <StyledTable>
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Build volume</th>
-          <th>Layer height</th>
-          <th>Max travel speed</th>
-          <th>Max temperatures</th>
-          <th>Controller</th>
-          <th>Filament diameter</th>
-        </tr>
-      </thead>
-      <tbody>
-        {printers.map((item: Printer) => (
-          <tr key={item.id}>
-            <td>{item.title}</td>
-            <td>{item.buildVolume}</td>
-            <td>{item.layerHeight}</td>
-            <td>{item.maxTravelSpeed}</td>
-            <td>{item.maxTemperatures}</td>
-            <td>{item.controller}</td>
-            <td>{item.filamentDiameter}</td>
+    <>
+      <StyledTable>
+        <thead>
+          <tr>
+            <th className="title-heading">Title</th>
+            {paramList.map(
+              (param) =>
+                !hiddenParams.includes(param) && (
+                  <TableHeading
+                    key={param[0]}
+                    param={param}
+                    eyeClick={() =>
+                      toggleParameter(param, hiddenParams, setHiddenParams)
+                    }
+                  />
+                )
+            )}
+            <th className="title-heading ">Variants</th>
           </tr>
-        ))}
-      </tbody>
-    </StyledTable>
+        </thead>
+
+        <tbody>
+          {printers.map((printer: Printer) => (
+            <tr key={printer.id}>
+              <td className="title-content">{printer.title}</td>
+              {paramList.map(
+                (param) =>
+                  !hiddenParams.includes(param) && (
+                    <td className="param" key={param[0]}>
+                      {printer[param[0]]}
+                    </td>
+                  )
+              )}
+              <td className="buy-variants">
+                {skuVariants.map(
+                  (variant) =>
+                    printer[variant[0]] && (
+                      <BuyButton key={variant[0]} variant={variant} />
+                    )
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </StyledTable>
+
+      <HiddenParams
+        hiddenParams={hiddenParams}
+        onParamClick={(param) =>
+          toggleParameter(param, hiddenParams, setHiddenParams)
+        }
+      />
+    </>
   );
 }

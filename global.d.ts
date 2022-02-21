@@ -10,3 +10,5 @@ declare interface Printer {
   diyKit: boolean;
   builtPrinter: boolean;
 }
+
+declare type paramName = [keyof Printer, string];
