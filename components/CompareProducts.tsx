@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import ProductTable from "../components/ProductTable";
 import { skuVariants } from "../constants/parameters";
+import FilterForm from "../layout/FilterForm";
 
 async function fetchPrintersByName(
   query: string,
@@ -58,27 +59,31 @@ export default function CompareProducts({ data }: { data: Printer[] }) {
     <>
       <h1>Compare Prusa printers</h1>
 
-      <section>
-        <label>
-          Search by name:
-          <input
-            type="text"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-          />
-        </label>
-
-        {skuVariants.map((variant) => (
-          <label key={variant[0]}>
+      <FilterForm>
+        <div className="search-form">
+          <label>
+            Search by name:
             <input
-              type="checkbox"
-              name={variant[0]}
-              onChange={setIndividualFilter}
-            />{" "}
-            {variant[1]}
+              type="text"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
           </label>
-        ))}
-      </section>
+        </div>
+
+        <div className="filters">
+          {skuVariants.map((variant) => (
+            <label key={variant[0]}>
+              <input
+                type="checkbox"
+                name={variant[0]}
+                onChange={setIndividualFilter}
+              />{" "}
+              {variant[1]}
+            </label>
+          ))}
+        </div>
+      </FilterForm>
 
       <ProductTable printers={getFilteredPrinters(printers, filter)} />
     </>

@@ -37,6 +37,7 @@ const Table = styled.table`
   td.param {
     outline: 1px solid rgb(200, 200, 200);
     background-color: #f1f1f1;
+    display: flex;
   }
 
   td.param:nth-child(odd),
