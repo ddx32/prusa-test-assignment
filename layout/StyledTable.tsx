@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { ORANGE } from "../constants/colors";
 
+/* We'll transpose rows and columns using CSS, so we still have
+an accessible HTML table while making it look according to spec */
 const Table = styled.table`
   display: grid;
   grid-template-columns: minmax(auto, max-content);
