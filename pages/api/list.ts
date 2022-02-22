@@ -65,7 +65,9 @@ export function getData(searchQuery?: string): { data: Printer[] } {
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const { query } = req;
-  if (typeof query.search === "string") {
+  if (!query.search) {
+    res.status(200).json(getData());
+  } else if (typeof query.search === "string") {
     res.status(200).json(getData(query.search));
   } else {
     res.status(500);

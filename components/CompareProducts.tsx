@@ -7,7 +7,7 @@ async function fetchPrintersByName(
   query: string,
   setPrinters: (a: Printer[]) => void
 ) {
-  const res = await fetch(`${window.location.origin}/api/list?search=${query}`);
+  const res = await fetch(`${window.location.origin}/list?search=${query}`);
   const { data } = await res.json();
   setPrinters(data);
 }
